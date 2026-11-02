@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full scroll-smooth" data-theme="cyber">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberType 疾速打字界 - 雙語遊戲化打字學習平台 showcase</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Fredoka:wght@500;600;700&family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        cute: ['Fredoka', 'Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        cyber: {
+                            bg: '#0b0f19',
+                            card: '#151d30',
+                            primary: '#06b6d4',
+                            accent: '#6366f1',
+                            pink: '#ff75c3',
+                            purple: '#9f7aea',
+                            gold: '#f59e0b',
+                            green: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* THEMES CONFIGURATION - LIGHT CYBER MODE */
+        [data-theme="cyber"] {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent: #06b6d4;
+            --accent-pink: #ec4899;
+            --accent-purple: #8b5cf6;
+            --border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+            user-select: none;
+        }
+
+        /* 可愛與帥氣漸層邊框與卡片 - 明亮清爽質感 */
+        .cute-cool-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 1.75rem;
+            box-shadow: 0 10px 30px -5px rgba(148, 163, 184, 0.25);
+            position: relative;
+        }
+
+        .cute-cool-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; right: -1px; bottom: -1px; left: -1px;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3));
+            border-radius: 1.75rem;
+            z-index: -1;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .cute-cool-card:hover::before {
+            opacity: 1;
+        }
+
+        /* 漸層文字 */
+        .gradient-text-cute {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cute-cool-gradient {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+        }
+
+        /* 按鈕動態 */
+        .btn-bounce {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-bounce:hover {
+            transform: translateY(-2px) scale(1.03);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.97);
+        }
+
+        /* SHAKE & DAMAGE ANIMATIONS */
+        .shake {
+            animation: shake 0.25s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-3px, 0, 0); }
+            20%, 80% { transform: translate3d(5px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-7px, 0, 0); }
+            40%, 60% { transform: translate3d(7px, 0, 0); }
+        }
+
+        /* FEVER OVERDRIVE GLOW */
+        .fever-mode {
+            animation: feverPulse 1s infinite alternate;
+        }
+
+        @keyframes feverPulse {
+            0% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), inset 0 0 15px rgba(236, 72, 153, 0.2); }
+            100% { box-shadow: 0 0 35px rgba(6, 182, 212, 0.5), inset 0 0 25px rgba(245, 158, 11, 0.3); }
+        }
+
+        /* TARGET KEY HIGHLIGHTS */
+        .key-target {
+            background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+            color: #ffffff !important;
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+        }
+        .key-target span { color: #ffffff !important; }
+
+        /* FLOATING TEXT ANIMATION */
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-40px) scale(1.3); }
+        }
+
+        .damage-float {
+            position: absolute;
+            animation: floatUp 0.8s ease-out forwards;
+            font-weight: 900;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 4px; }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans overflow-x-hidden text-slate-800">
+
+    <!-- Particle & Canvas Visual Overlay -->
+    <canvas id="fxCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 lg:px-8 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+                <div class="w-10 h-10 rounded-2xl cute-cool-gradient flex items-center justify-center text-white font-black text-xl shadow-md">
+                    <i class="fa-solid fa-keyboard"></i>
+                </div>
+                <div>
+                    <h1 class="font-cute font-extrabold text-xl tracking-wider gradient-text-cute">
+                        CYBER<span class="font-mono font-normal">TYPE</span>
+                    </h1>
+                    <p class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">疾速打字界 // 二次元賽博展示網頁</p>
+                </div>
+            </div>
+
+            <!-- Showcase Section Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-xs font-bold">
+                <a href="#about" class="text-slate-600 hover:text-pink-500 transition">專案簡介</a>
+                <a href="#timeline" class="text-slate-600 hover:text-pink-500 transition">研發歷程</a>
+                <a href="#theme-song" class="text-slate-600 hover:text-pink-500 transition">Suno AI 主題曲</a>
+                <a href="#game-section" class="px-4 py-2 rounded-xl cute-cool-gradient text-white font-extrabold shadow-md btn-bounce">
+                    <i class="fa-solid fa-gamepad mr-1.5"></i>前往體驗遊戲
+                </a>
+            </nav>
+
+            <!-- Sound & Language Controls -->
+            <div class="flex items-center space-x-2">
+                <div class="bg-slate-100 p-1 rounded-xl flex border border-slate-200">
+                    <button id="langEnBtn" onclick="switchLanguageMode('EN')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition bg-cyan-500 text-white shadow-sm">EN</button>
+                    <button id="langCnBtn" onclick="switchLanguageMode('CN')" class="px-2.5 py-1 rounded-lg font-bold text-xs transition text-slate-500 hover:text-slate-900">注音</button>
+                </div>
+                <button id="soundBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200">
+                    <i class="fa-solid fa-volume-high text-xs" id="soundIcon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN SHOWCASE CONTENT -->
+    <main class="flex-1 space-y-20 py-10">
+
+        <!-- SECTION 1: HERO SHOWCASE BANNER -->
+        <section id="hero" class="max-w-7xl mx-auto px-4 lg:px-8">
+            <div class="cute-cool-card p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="space-y-6 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-600 text-xs font-extrabold tracking-wider uppercase">
+                        <span>✨ Cute & Cool Cyberpunk Showcase</span>
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-extrabold font-cute leading-tight text-slate-900">
+                        讓打字學習變成一場<br>
+                        <span class="gradient-text-cute">繽紛且熱血的賽博冒險！</span>
+                    </h2>
+                    <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+                        結合 **Q 版可愛元素** 與 **帥氣賽博龐克介面**，包含英文全鍵盤指法特訓、中文注音符號應答、RPG Boss 討伐戰，以及專屬 Suno AI 主題曲展示！
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <a href="#game-section" class="px-6 py-3.5 rounded-2xl cute-cool-gradient text-white font-extrabold text-sm shadow-lg btn-bounce inline-flex items-center space-x-2">
+                            <span>🎮 開始線上試玩平台</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#theme-song" class="px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-extrabold text-sm btn-bounce inline-flex items-center space-x-2">
+                            <i class="fa-solid fa-music text-pink-500"></i>
+                            <span>收聽 Suno 主題曲</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Showcase Illustration Badge -->
+                <div class="w-full md:w-80 h-72 rounded-3xl bg-slate-50 border border-slate-200 p-6 flex flex-col justify-between relative shadow-inner overflow-hidden">
+                    <div class="flex justify-between items-center text-xs font-mono font-bold text-slate-400">
+                        <span>CYBERTYPE PLATFORM</span>
+                        <span class="text-emerald-500">● LIVE READY</span>
+                    </div>
+                    <div class="text-center space-y-2 my-auto">
+                        <div class="w-20 h-20 mx-auto rounded-2xl cute-cool-gradient flex items-center justify-center text-white text-3xl shadow-lg animate-bounce">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-slate-900 font-cute">雙語遊戲化打字界</h4>
+                        <p class="text-xs text-slate-500">全鍵盤指法 × 注音盲打 × Boss戰</p>
+                    </div>
+                    <div class="flex justify-between text-[11px] font-mono text-cyan-600 font-bold border-t border-slate-200 pt-3">
+                        <span>WPM: 138+</span>
+                        <span>ACC: 99%</span>
+                        <span>COMBO: 125</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: DEVELOPMENT TIMELINE (歷程時間軸) -->
+        <section id="timeline" class="max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+            <div class="text-center space-y-2">
+                <span class="text-xs font-bold text-pink-500 tracking-widest uppercase">DEVELOPMENT MILESTONES</span>
+                <h3 class="text-3xl font-extrabold font-cute gradient-text-cute">專案研發歷程時間軸</h3>
+                <p class="text-slate-500 text-sm max-w-xl mx-auto">從視覺概念發想、二次元賽博風格定位，到完整雙語打字平台的程式開發。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Timeline Step 1 -->
+                <div class="cute-cool-card p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center font-mono font-bold text-sm">
+                        01
+                    </div>
+                    <h4 class="font-extrabold text-base text-slate-900">視覺定位與美學調性</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        確立「可愛 Q 版」與「帥氣賽博」雙重風格。設計亮眼標題與繽紛馬卡龍霓虹配色。
+                    </p>
+                </div>
+
+                <!-- Timeline Step 2 -->
+                <div class="cute-cool-card p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-mono font-bold text-sm">
+                        02
+                    </div>
+                    <h4 class="font-extrabold text-base text-slate-900">雙語指法與邏輯架構</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        建立英文字母與注音符號（ㄅㄆㄇㄈ）鍵盤對映映射表，支援即時指法輔助與按鍵突顯。
+                    </p>
+                </div>
+
+                <!-- Timeline Step 3 -->
+                <div class="cute-cool-card p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center font-mono font-bold text-sm">
+                        03
+                    </div>
+                    <h4 class="font-extrabold text-base text-slate-900">Suno AI 概念主題曲</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        運用 Suno AI 創作官方主題曲《指尖的光芒》，打造熱血激勵的二次元搖滾音樂體驗。
+                    </p>
+                </div>
+
+                <!-- Timeline Step 4 -->
+                <div class="cute-cool-card p-6 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-mono font-bold text-sm">
+                        04
+                    </div>
+                    <h4 class="font-extrabold text-base text-slate-900">RPG Boss 與 Arcade 街機</h4>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        加入打字扣血 Boss 討伐戰、Arcade 隕石落塊防禦與自訂程式碼特訓，提升平台娛樂性。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: SUNO AI THEME SONG SHOWCASE -->
+        <section id="theme-song" class="max-w-7xl mx-auto px-4 lg:px-8">
+            <div class="cute-cool-card p-8 md:p-12 relative overflow-hidden space-y-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div>
+                        <span class="text-xs font-bold text-pink-500 uppercase tracking-widest">SUNO AI THEME SONG SHOWCASE</span>
+                        <h3 class="text-3xl font-extrabold font-cute mt-1 text-slate-900">官方主題曲：《指尖的光芒》</h3>
+                        <p class="text-slate-500 text-xs md:text-sm mt-1">風格：Soft Indie Rock / Pop Ballad (暖心抒情搖滾)</p>
+                    </div>
+
+                    <!-- Direct Suno Link Showcase Card -->
+                    <div class="w-full md:w-auto bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col justify-between min-w-[320px] shadow-sm">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <a href="https://suno.com/s/hEr3BBh5CWoIdi0K" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-xl cute-cool-gradient text-white flex items-center justify-center text-xl shadow-md btn-bounce focus:outline-none shrink-0">
+                                <i class="fa-solid fa-play ml-0.5"></i>
+                            </a>
+                            <div>
+                                <div class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                                    <span>指尖的光芒 (Fingertips of Light)</span>
+                                </div>
+                                <div class="text-xs text-pink-500 font-semibold">Suno AI 原創單曲</div>
+                            </div>
+                        </div>
+
+                        <a href="https://suno.com/s/hEr3BBh5CWoIdi0K" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 rounded-xl cute-cool-gradient text-white font-extrabold text-xs shadow-md btn-bounce flex items-center justify-center gap-2">
+                            <span><i class="fa-solid fa-music"></i> 前往 Suno 收聽完整主題曲</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+
+                        <div class="flex justify-between items-center text-[11px] text-slate-400 pt-3 border-t border-slate-200 mt-3">
+                            <span>點擊開啟專屬歌曲頁面</span>
+                            <span class="text-cyan-600 font-semibold">● Suno.com</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lyrics Showcase -->
+                <div class="bg-slate-50/80 rounded-2xl p-6 border border-slate-200 space-y-3 font-sans shadow-inner">
+                    <h4 class="text-xs font-bold text-cyan-600 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-quote-left"></i> 精選歌詞摘錄 (Selected Lyric Excerpt)
+                    </h4>
+                    <p class="text-sm md:text-base text-slate-700 leading-relaxed font-semibold">
+                        「螢光幕閃爍著冷冽的光點，F 與 J 微小的座標，像夜海中閃爍的警戒。<br>
+                        肌肉記憶在甦醒，敲擊出專屬的律動線——超越昨天的懦弱，當 Fever Overdrive 點燃狂暴的光芒，每一步、每一字，都在改寫我的世界！」
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: LIVE INTERACTIVE GAMEPLATFORM (遊戲平台區塊) -->
+        <section id="game-section" class="max-w-7xl mx-auto px-4 lg:px-8 space-y-6">
+            <div class="text-center space-y-2">
+                <span class="text-xs font-bold text-cyan-500 tracking-widest uppercase">LIVE GAME PLAYGROUND</span>
+                <h3 class="text-3xl font-extrabold font-cute gradient-text-cute">實體線上打字平台體驗區</h3>
+                <p class="text-slate-500 text-sm">直接在下方切換闖關地圖、街機隕石模式或程式碼特訓！</p>
+            </div>
+
+            <!-- GAME HUB CARD CONTAINER -->
+            <div class="cute-cool-card p-6 md:p-8 space-y-6">
+
+                <!-- Mode Navigation Tabs Switcher -->
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+                    <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 text-xs font-bold space-x-1">
+                        <button id="tabMapBtn" onclick="switchMainTab('map')" class="px-4 py-2 rounded-xl transition shadow-sm cute-cool-gradient text-white">
+                            <i class="fa-solid fa-map mr-1.5"></i>關卡地圖
+                        </button>
+                        <button id="tabArcadeBtn" onclick="switchMainTab('arcade')" class="px-4 py-2 rounded-xl transition text-slate-500 hover:text-slate-900">
+                            <i class="fa-solid fa-gamepad mr-1.5"></i>Arcade 街機隕石
+                        </button>
+                        <button id="tabCodeBtn" onclick="switchMainTab('code')" class="px-4 py-2 rounded-xl transition text-slate-500 hover:text-slate-900">
+                            <i class="fa-solid fa-code mr-1.5"></i>程式碼 & 自訂
+                        </button>
+                    </div>
+
+                    <!-- User Exp Bar -->
+                    <div class="flex items-center space-x-3 bg-slate-100 px-4 py-2 rounded-2xl border border-slate-200 text-xs font-bold">
+                        <span id="userLevelText" class="text-cyan-600 font-extrabold">Lv.1</span>
+                        <div class="w-24 bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                            <div id="expBar" class="cute-cool-gradient h-full w-1/4 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 1: MAP SELECTION -->
+                <div id="mapScreen" class="space-y-6">
+                    <div class="bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-cyan-500/10 rounded-2xl p-6 border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <span id="modeBadgeTag" class="inline-block px-3 py-1 bg-white rounded-full text-xs font-extrabold text-pink-600 mb-2 border border-pink-200 uppercase shadow-sm">
+                                ⚡ 英文闖關模式 English Mission
+                            </span>
+                            <h4 id="modeTitleText" class="text-xl font-extrabold text-slate-900">歡迎來到疾速打字地圖！</h4>
+                            <p id="modeDescText" class="text-xs text-slate-500 mt-1">包含主鍵盤指法、延伸鍵與 Boss 討伐戰！保持 Combo 獲得最高星等！</p>
+                        </div>
+                        <div class="text-xs font-bold text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
+                            解鎖進度: <span id="unlockProgress" class="text-pink-500 font-mono font-black">1 / 6</span> 關
+                        </div>
+                    </div>
+
+                    <div id="levelsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <!-- Dynamically generated via JS -->
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 2: TYPING ARENA -->
+                <div id="gameScreen" class="hidden flex-col space-y-6">
+                    <!-- Top HUD -->
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex items-center justify-between">
+                        <button onclick="switchMainTab('map')" class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold flex items-center space-x-1.5 shadow-sm">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>返回選關</span>
+                        </button>
+                        <div class="text-center">
+                            <span id="gameStageTag" class="text-[10px] font-extrabold text-pink-600 uppercase bg-pink-100 px-3 py-0.5 rounded-full border border-pink-200">STAGE 1-1</span>
+                            <h4 id="gameStageTitle" class="font-extrabold text-base text-slate-900">定位鍵基礎 F & J</h4>
+                        </div>
+                        <button onclick="restartLevel()" class="px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-xs font-bold flex items-center space-x-1.5 border border-indigo-200 shadow-sm">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>重來</span>
+                        </button>
+                    </div>
+
+                    <!-- RPG BOSS HEALTH BAR -->
+                    <div id="bossHpContainer" class="hidden bg-red-50/60 rounded-2xl p-4 border border-red-200 space-y-2 relative overflow-hidden">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-2xl animate-bounce">👾</span>
+                                <div>
+                                    <span class="text-[10px] font-black text-red-500 uppercase tracking-widest block">STAGE BOSS</span>
+                                    <h5 id="bossName" class="font-black text-sm text-slate-900">賽博巨獸 · 數位破壞者</h5>
+                                </div>
+                            </div>
+                            <span id="bossHpText" class="font-mono font-black text-xs text-red-600">1000 / 1000 HP</span>
+                        </div>
+                        <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden border border-red-200">
+                            <div id="bossHpBar" class="bg-gradient-to-r from-red-500 via-pink-500 to-amber-500 h-full w-full rounded-full transition-all duration-200"></div>
+                        </div>
+                    </div>
+
+                    <!-- Metrics HUD Grid -->
+                    <div class="grid grid-cols-4 gap-3">
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">WPM</div>
+                            <div id="hudWPM" class="text-2xl font-black font-mono text-cyan-600">0</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">正確率</div>
+                            <div id="hudAcc" class="text-2xl font-black font-mono text-emerald-600">100%</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">COMBO</div>
+                            <div id="hudCombo" class="text-2xl font-black font-mono text-pink-500">0</div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-center">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase">時間</div>
+                            <div id="hudTime" class="text-2xl font-black font-mono text-amber-500">0s</div>
+                        </div>
+                    </div>
+
+                    <!-- Main Typing Arena Box -->
+                    <div id="typingCard" class="bg-white rounded-3xl p-6 md:p-8 border border-slate-200 shadow-sm relative overflow-hidden flex flex-col justify-center min-h-[200px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-2 text-xs font-bold text-slate-400">
+                                <i class="fa-solid fa-bullseye text-pink-500"></i>
+                                <span id="typingFingerHint">提示：請用 左手食指 敲擊 F 鍵</span>
+                            </div>
+                            <div id="comboBadge" class="opacity-0 font-mono font-black text-xs px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-amber-500 text-white shadow-md">
+                                🔥 FEVER OVERDRIVE!
+                            </div>
+                        </div>
+
+                        <!-- Displayed Typing Text -->
+                        <div id="textDisplay" class="font-mono text-2xl md:text-3xl leading-relaxed tracking-wider break-words select-none">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-100 h-2 rounded-full mt-6 overflow-hidden">
+                            <div id="levelProgressBar" class="cute-cool-gradient h-full w-0 transition-all duration-200"></div>
+                        </div>
+                    </div>
+
+                    <!-- Virtual Keyboard -->
+                    <div class="bg-slate-50 rounded-3xl p-4 border border-slate-200 space-y-2">
+                        <div class="flex justify-between items-center px-2 text-xs font-bold text-slate-400">
+                            <span>雙語輔助對照鍵盤</span>
+                            <span class="text-pink-500">● 目標鍵</span>
+                        </div>
+                        <div id="virtualKeyboard" class="space-y-1.5 font-mono text-xs">
+                            <!-- Virtual keys populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 3: ARCADE MODE -->
+                <div id="arcadeScreen" class="hidden flex-col space-y-4">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-black text-base text-cyan-600 flex items-center gap-2">
+                                <i class="fa-solid fa-meteor"></i> Arcade 街機隕石防禦
+                            </h4>
+                            <p class="text-xs text-slate-500">字母落下至防禦線之前，敲擊對應按鍵以擊毀！</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="text-right font-mono font-black">
+                                <span class="text-[10px] text-slate-400 block">SCORE</span>
+                                <span id="arcadeScore" class="text-xl text-amber-500">0</span>
+                            </div>
+                            <button id="arcadeStartBtn" onclick="toggleArcadeGame()" class="px-4 py-2 rounded-xl cute-cool-gradient text-white font-extrabold text-xs shadow-md">
+                                開始挑戰
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="arcadeArena" class="bg-slate-900 rounded-3xl h-[360px] border border-slate-800 relative overflow-hidden flex flex-col justify-between p-4 shadow-xl">
+                        <div class="text-center text-slate-500 font-mono text-xs uppercase tracking-widest pointer-events-none">
+                            -- CYBER DEFENSE GRID READY --
+                        </div>
+                        <div class="absolute bottom-8 left-0 right-0 border-b-2 border-dashed border-red-500/60 flex justify-between px-4 text-[10px] font-bold text-red-400 pointer-events-none">
+                            <span>DEFENSE LINE</span>
+                            <span>DANGER ZONE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB 4: CODE WORKSHOP -->
+                <div id="codeScreen" class="hidden flex-col space-y-4">
+                    <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-4">
+                        <h4 class="font-black text-lg text-pink-500 flex items-center gap-2">
+                            <i class="fa-solid fa-code"></i> 程式碼與自訂文章練打工作坊
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="loadCodePreset('js')" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-cyan-600 text-xs font-bold border border-slate-200 shadow-sm">⚡ JavaScript</button>
+                            <button onclick="loadCodePreset('python')" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-emerald-600 text-xs font-bold border border-slate-200 shadow-sm">🐍 Python</button>
+                            <button onclick="loadCodePreset('html')" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-amber-600 text-xs font-bold border border-slate-200 shadow-sm">🌐 HTML</button>
+                        </div>
+                        <textarea id="customTextInput" rows="4" class="w-full bg-white border border-slate-200 rounded-2xl p-4 font-mono text-sm text-slate-800 focus:outline-none focus:border-pink-500 shadow-inner" placeholder="在此貼上任何英文或中文練習文章..."></textarea>
+                        <button onclick="startCustomTyping()" class="w-full py-3 cute-cool-gradient text-white font-extrabold rounded-2xl text-xs shadow-md btn-bounce">
+                            🚀 開始自訂文章特訓
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 py-8 bg-white text-center text-xs text-slate-400 space-y-2">
+        <p class="font-cute font-extrabold text-sm gradient-text-cute">CYBERTYPE 疾速打字界</p>
+        <p>© 2026 CyberType. All rights reserved. 雙語遊戲化打字學習平台展示頁面</p>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="cute-cool-card rounded-3xl max-w-md w-full p-6 text-center space-y-5 transform scale-95 transition-transform duration-300">
+            <div class="w-16 h-16 mx-auto rounded-2xl cute-cool-gradient flex items-center justify-center text-white text-3xl shadow-lg animate-bounce">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl font-black font-cute text-slate-900">關卡挑戰成功！</h3>
+                <p class="text-xs text-slate-500 mt-1">指法流暢，你的反應速度極快！</p>
+            </div>
+            <div class="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200 font-mono">
+                <div>
+                    <div class="text-[10px] text-slate-400">WPM</div>
+                    <div id="resWpm" class="text-lg font-black text-cyan-600">45</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-slate-400">ACC</div>
+                    <div id="resAcc" class="text-lg font-black text-emerald-600">98%</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-slate-400">COMBO</div>
+                    <div id="resCombo" class="text-lg font-black text-pink-500">32</div>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="restartLevel()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 font-bold rounded-xl text-xs text-slate-700">再試一次</button>
+                <button onclick="nextLevel()" class="flex-1 py-2.5 cute-cool-gradient text-white font-extrabold rounded-xl text-xs shadow-md">下一關 <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SCRIPT ENGINE -->
+    <script>
+        /* --- ZHUYIN MAPPINGS & DATA --- */
+        const ZHUYIN_MAP = {
+            '1':'ㄅ', '2':'ㄉ', '3':'ˇ', '4':'ˋ', '5':'ㄓ', '6':'ˊ', '7':'˙', '8':'ㄚ', '9':'ㄞ', '0':'ㄢ', '-':'ㄦ',
+            'Q':'ㄆ', 'W':'ㄊ', 'E':'ㄍ', 'R':'ㄐ', 'T':'ㄔ', 'Y':'ㄗ', 'U':'ㄧ', 'I':'ㄛ', 'O':'ㄟ', 'P':'ㄣ',
+            'A':'ㄇ', 'S':'ㄋ', 'D':'ㄎ', 'F':'ㄑ', 'G':'ㄕ', 'H':'ㄘ', 'J':'ㄨ', 'K':'ㄜ', 'L':'ㄠ', ';':'ㄤ',
+            'Z':'ㄈ', 'X':'ㄌ', 'C':'ㄏ', 'V':'ㄒ', 'B':'ㄖ', 'N':'ㄙ', 'M':'ㄩ', ',':'ㄝ', '.':'ㄡ', '/':'ㄥ'
+        };
+        const ZHUYIN_TO_KEY = {};
+        for (let k in ZHUYIN_MAP) ZHUYIN_TO_KEY[ZHUYIN_MAP[k]] = k;
+
+        const ENGLISH_STAGES = [
+            { id: 'E1-1', title: '定位鍵基礎 F & J', desc: '基準定位鍵 (F, J) 盲打練習', targetWpm: 15, text: 'f j ff jj fjfj jfjf ffff jjjj fjjf jffj', isBoss: false },
+            { id: 'E1-2', title: '主鍵盤基準線 A-L', desc: '中排基準鍵 (A S D F J K L ;)', targetWpm: 20, text: 'asdf jkl; a s d f j k l ; asdfjkl; fdsajkl;', isBoss: false },
+            { id: 'E1-3', title: '上排延伸 E R I O T Y', desc: '手指向上延伸 (E, R, I, O, T, Y)', targetWpm: 22, text: 'fre jki frde jkio fire red ore rod rode professional', isBoss: false },
+            { id: 'E1-4', title: '下排延伸 Z X C V B N M', desc: '手指向下延伸 (Z, X, C, V, B, N, M)', targetWpm: 24, text: 'zxcv bnm zxc vbn mcz vbx mix box van cabin carbon cyber zinc', isBoss: false },
+            { id: 'E2-1', title: '疾風科技單字', desc: '高頻電腦與賽博英文單字特訓', targetWpm: 28, text: 'system player level action combo score bonus power speed pixel matrix keyboard', isBoss: false },
+            { id: 'E3-1', title: '賽博巨獸討伐 (BOSS)', desc: '擊敗數位破壞者 Boss！', targetWpm: 35, text: 'The quick brown fox jumps over the lazy dog near the digital neon grid zone.', isBoss: true, bossHp: 800 }
+        ];
+
+        const CHINESE_STAGES = [
+            { id: 'C1-1', title: '注音聲母符號基礎', desc: '對照畫面注音符號敲擊對應實體鍵', targetWpm: 15, items: [{ cn: '', zhuyin: 'ㄅㄆㄇㄈ ㄉㄊㄋㄌ ㄍㄎㄏ ㄐㄑㄒ ㄓㄔㄕㄖ ㄗㄘㄙ' }], isBoss: false },
+            { id: 'C1-2', title: '介母與韻母特訓', desc: '介母 (ㄧㄨㄩ) 與韻母 (ㄚㄛㄜㄝ ㄞㄟㄠㄡ ㄢㄣㄤㄥ ㄦ)', targetWpm: 18, items: [{ cn: '', zhuyin: 'ㄧㄨㄩ ㄚㄛㄜㄝ ㄞㄟㄠㄡ ㄢㄣㄤㄥ ㄦ' }], isBoss: false },
+            { id: 'C2-1', title: '常用基礎雙字詞', desc: '實務雙字詞練打', targetWpm: 22, items: [{ cn: '打字', zhuyin: 'ㄉㄚˇ ㄗˋ' }, { cn: '學習', zhuyin: 'ㄒㄩㄝˊ ㄒㄧˊ' }, { cn: '速度', zhuyin: 'ㄙㄨˋ ㄉㄨˋ' }, { cn: '挑戰', zhuyin: 'ㄊㄧㄠˇ ㄓㄢˋ' }], isBoss: false },
+            { id: 'C3-1', title: '終極賽博巨獸討伐 (BOSS)', desc: '高難度中文盲打 BOSS 戰！', targetWpm: 32, items: [{ cn: '疾速打字界', zhuyin: 'ㄐㄧˊ ㄙㄨˋ ㄉㄚˇ ㄗˋ ㄐㄧㄝˋ' }, { cn: '突破極限超越自我', zhuyin: 'ㄊㄨˋ ㄆㄛˋ ㄐㄧˊ ㄒㄧㄢˋ ㄔㄠ ㄩㄝˋ ㄗˋ ㄨㄛˇ' }], isBoss: true, bossHp: 1000 }
+        ];
+
+        const KEYBOARD_ROWS = [
+            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-'],
+            ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+            ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'],
+            ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/']
+        ];
+
+        const FINGER_MAP = {
+            '1':'左手小指', '2':'左手無名指', '3':'左手中指', '4':'左手食指', '5':'左手食指',
+            '6':'右手食指', '7':'右手食指', '8':'右手中指', '9':'右手無名指', '0':'右手小指', '-':'右手小指',
+            'Q':'左手小指', 'A':'左手小指', 'Z':'左手小指', 'W':'左手無名指', 'S':'左手無名指', 'X':'左手無名指',
+            'E':'左手中指', 'D':'左手中指', 'C':'左手中指', 'R':'左手食指', 'F':'左手食指', 'V':'左手食指',
+            'T':'左手食指', 'G':'左手食指', 'B':'左手食指', 'Y':'右手食指', 'H':'右手食指', 'N':'右手食指',
+            'U':'右手食指', 'J':'右手食指', 'M':'右手食指', 'I':'右手中指', 'K':'右手中指', ',':'右手中指',
+            'O':'右手無名指', 'L':'右手無名指', '.':'右手無名指', 'P':'右手小指', ';':'右手小指', '/':'右手小指', ' ':'雙手大拇指'
+        };
+
+        /* STATE MANAGEMENT */
+        let state = {
+            activeTab: 'map',
+            langMode: 'EN',
+            currentStageIdx: 0,
+            unlockedEnIdx: 0,
+            unlockedCnIdx: 0,
+            userLevel: 1,
+            userExp: 0,
+            soundEnabled: true,
+            // Gameplay Stats
+            currentIndex: 0,
+            correctHits: 0,
+            wrongHits: 0,
+            combo: 0,
+            maxCombo: 0,
+            startTime: null,
+            timerInterval: null,
+            targetSequence: [],
+            isFinished: false,
+            // Boss Stats
+            isBossStage: false,
+            bossMaxHp: 1000,
+            bossHp: 1000,
+            // Arcade Stats
+            arcadeActive: false,
+            arcadeScore: 0,
+            arcadeItems: [],
+            arcadeInterval: null
+        };
+
+        /* AUDIO SYNTHESIZER */
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playSound(type) {
+            if (!state.soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+
+            if (type === 'key') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(320 + Math.min(state.combo * 10, 300), now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(120, now);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                osc.start(now); osc.stop(now + 0.12);
+            } else if (type === 'win') {
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.connect(g); g.connect(audioCtx.destination);
+                    o.frequency.setValueAtTime(f, now + i * 0.08);
+                    g.gain.setValueAtTime(0.08, now + i * 0.08);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.2);
+                    o.start(now + i * 0.08); o.stop(now + i * 0.08 + 0.2);
+                });
+            }
+        }
+
+        function toggleSound() {
+            state.soundEnabled = !state.soundEnabled;
+            document.getElementById('soundIcon').className = state.soundEnabled 
+                ? 'fa-solid fa-volume-high text-xs text-pink-400' 
+                : 'fa-solid fa-volume-xmark text-xs text-slate-500';
+        }
+
+        /* NAVIGATION & TABS */
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function switchMainTab(tab) {
+            state.activeTab = tab;
+            ['mapScreen', 'gameScreen', 'arcadeScreen', 'codeScreen'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            ['Map', 'Arcade', 'Code'].forEach(t => {
+                const btn = document.getElementById(`tab${t}Btn`);
+                if (btn) btn.className = 'px-4 py-2 rounded-xl transition text-slate-400 hover:text-white';
+            });
+
+            if (tab === 'map') {
+                document.getElementById('mapScreen').classList.remove('hidden');
+                document.getElementById('tabMapBtn').className = 'px-4 py-2 rounded-xl transition shadow-sm cute-cool-gradient text-white';
+                renderMap();
+            } else if (tab === 'game') {
+                document.getElementById('gameScreen').classList.remove('hidden');
+                document.getElementById('gameScreen').classList.add('flex');
+            } else if (tab === 'arcade') {
+                document.getElementById('arcadeScreen').classList.remove('hidden');
+                document.getElementById('arcadeScreen').classList.add('flex');
+                document.getElementById('tabArcadeBtn').className = 'px-4 py-2 rounded-xl transition shadow-sm cute-cool-gradient text-white';
+            } else if (tab === 'code') {
+                document.getElementById('codeScreen').classList.remove('hidden');
+                document.getElementById('codeScreen').classList.add('flex');
+                document.getElementById('tabCodeBtn').className = 'px-4 py-2 rounded-xl transition shadow-sm cute-cool-gradient text-white';
+            }
+        }
+
+        function switchLanguageMode(lang) {
+            state.langMode = lang;
+            document.getElementById('langEnBtn').className = lang === 'EN' ? 'px-2.5 py-1 rounded-lg font-bold text-xs transition bg-cyan-500 text-white' : 'px-2.5 py-1 rounded-lg font-bold text-xs transition text-slate-400 hover:text-white';
+            document.getElementById('langCnBtn').className = lang === 'CN' ? 'px-2.5 py-1 rounded-lg font-bold text-xs transition bg-cyan-500 text-white' : 'px-2.5 py-1 rounded-lg font-bold text-xs transition text-slate-400 hover:text-white';
+            document.getElementById('modeBadgeTag').innerText = lang === 'EN' ? '⚡ 英文闖關模式 English Mission' : '🀄 中文注音模式 Chinese Zhuyin Mission';
+            renderMap();
+        }
+
+        function getCurrentStages() {
+            return state.langMode === 'EN' ? ENGLISH_STAGES : CHINESE_STAGES;
+        }
+
+        function renderMap() {
+            const grid = document.getElementById('levelsGrid');
+            grid.innerHTML = '';
+            const stages = getCurrentStages();
+            const unlockedIdx = state.langMode === 'EN' ? state.unlockedEnIdx : state.unlockedCnIdx;
+
+            stages.forEach((stage, idx) => {
+                const isUnlocked = idx <= unlockedIdx;
+                const card = document.createElement('div');
+                card.className = `bg-white border border-slate-200 rounded-2xl p-5 transition-all relative overflow-hidden flex flex-col justify-between shadow-sm ${
+                    isUnlocked ? 'hover:border-pink-500/50 hover:shadow-md cursor-pointer' : 'opacity-40'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full ${stage.isBoss ? 'bg-red-100 text-red-600 border border-red-200' : 'bg-slate-100 text-cyan-600'}">
+                            ${stage.isBoss ? '👾 BOSS' : 'STAGE ' + stage.id}
+                        </span>
+                        <div class="text-amber-400 text-xs">
+                            ${isUnlocked ? '<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>' : '<i class="fa-solid fa-lock text-slate-300"></i>'}
+                        </div>
+                    </div>
+                    <div>
+                        <h5 class="font-extrabold text-sm text-slate-900 mb-1">${stage.title}</h5>
+                        <p class="text-[11px] text-slate-500">${stage.desc}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs mt-3">
+                        <span class="text-[11px] text-slate-400 font-mono">${stage.targetWpm} WPM</span>
+                        ${isUnlocked ? '<span class="font-extrabold text-pink-500">進入挑戰 <i class="fa-solid fa-chevron-right text-[10px]"></i></span>' : '<span class="text-slate-400">未解鎖</span>'}
+                    </div>
+                `;
+
+                if (isUnlocked) card.onclick = () => startLevel(idx);
+                grid.appendChild(card);
+            });
+
+            document.getElementById('unlockProgress').innerText = `${unlockedIdx + 1} / ${stages.length}`;
+        }
+
+        /* GAME ENGINE */
+        function startLevel(stageIdx) {
+            if (document.activeElement && typeof document.activeElement.blur === 'function') document.activeElement.blur();
+            state.currentStageIdx = stageIdx;
+            const stages = getCurrentStages();
+            const stage = stages[stageIdx];
+
+            state.currentIndex = 0;
+            state.correctHits = 0;
+            state.wrongHits = 0;
+            state.combo = 0;
+            state.maxCombo = 0;
+            state.startTime = null;
+            state.isFinished = false;
+
+            state.isBossStage = stage.isBoss || false;
+            if (state.isBossStage) {
+                state.bossMaxHp = stage.bossHp || 1000;
+                state.bossHp = state.bossMaxHp;
+                document.getElementById('bossHpContainer').classList.remove('hidden');
+                updateBossHpUI();
+            } else {
+                document.getElementById('bossHpContainer').classList.add('hidden');
+            }
+
+            if (state.timerInterval) clearInterval(state.timerInterval);
+
+            if (state.langMode === 'EN') {
+                state.targetSequence = Array.from(stage.text).map(c => ({ display: c, key: c.toUpperCase() }));
+            } else {
+                state.targetSequence = buildChineseSequence(stage.items);
+            }
+
+            document.getElementById('gameStageTag').innerText = `STAGE ${stage.id}`;
+            document.getElementById('gameStageTitle').innerText = stage.title;
+
+            renderVirtualKeyboard();
+            renderTextDisplay();
+            updateHUD();
+
+            switchMainTab('game');
+        }
+
+        function buildChineseSequence(items) {
+            const seq = [];
+            items.forEach((item, itemIdx) => {
+                const cnChars = item.cn ? Array.from(item.cn) : [];
+                const zhuyinBlocks = item.zhuyin.trim().split(/\s+/);
+                let cnPointer = 0;
+
+                zhuyinBlocks.forEach((block, blockIdx) => {
+                    for (let i = 0; i < block.length; i++) {
+                        const zChar = block[i];
+                        seq.push({ display: zChar, key: ZHUYIN_TO_KEY[zChar] || zChar.toUpperCase() });
+                    }
+                    if (blockIdx < zhuyinBlocks.length - 1) seq.push({ display: ' ', key: ' ' });
+                });
+                if (itemIdx < items.length - 1) seq.push({ display: ' ', key: ' ' });
+            });
+            return seq;
+        }
+
+        function renderVirtualKeyboard() {
+            const container = document.getElementById('virtualKeyboard');
+            container.innerHTML = '';
+            KEYBOARD_ROWS.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'flex justify-center space-x-1 my-1';
+                row.forEach(keyChar => {
+                    const btn = document.createElement('div');
+                    btn.id = `key-${keyChar}`;
+                    const zhuyin = ZHUYIN_MAP[keyChar] || '';
+                    btn.className = 'flex-1 max-w-[42px] h-9 bg-white border border-slate-200 rounded-lg flex flex-col items-center justify-center font-mono select-none transition-all shadow-sm';
+                    btn.innerHTML = `<span class="text-xs text-slate-800 font-bold">${keyChar}</span>${zhuyin ? `<span class="text-[9px] text-pink-500 font-semibold">${zhuyin}</span>` : ''}`;
+                    rowDiv.appendChild(btn);
+                });
+                container.appendChild(rowDiv);
+            });
+        }
+
+        function highlightVirtualKey(targetKey) {
+            document.querySelectorAll('#virtualKeyboard [id^="key-"]').forEach(el => el.classList.remove('key-target'));
+            if (!targetKey) return;
+            const targetEl = document.getElementById(targetKey === ' ' ? 'key-SPACE' : `key-${targetKey.toUpperCase()}`);
+            if (targetEl) targetEl.classList.add('key-target');
+        }
+
+        function renderTextDisplay() {
+            const container = document.getElementById('textDisplay');
+            container.innerHTML = '';
+            state.targetSequence.forEach((item, i) => {
+                const span = document.createElement('span');
+                span.className = 'inline-block transition-all';
+                span.innerText = item.display === ' ' ? '\u00A0' : item.display;
+                if (i < state.currentIndex) span.classList.add('text-emerald-600', 'font-bold');
+                else if (i === state.currentIndex) span.classList.add('bg-pink-500', 'text-white', 'rounded', 'px-1', 'scale-105', 'shadow-sm');
+                else span.classList.add('text-slate-400');
+                container.appendChild(span);
+            });
+
+            const current = state.targetSequence[state.currentIndex];
+            if (current) {
+                const finger = FINGER_MAP[current.key] || '正確手指';
+                document.getElementById('typingFingerHint').innerText = `提示：請用 ${finger} 敲擊 ${current.key === ' ' ? 'SPACE 空白鍵' : current.key + ' 鍵'}`;
+                highlightVirtualKey(current.key);
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (state.activeTab === 'arcade' && state.arcadeActive) {
+                if (e.key === ' ') e.preventDefault();
+                handleArcadeInput(e.key);
+                return;
+            }
+            if (state.activeTab !== 'game' || state.isFinished) return;
+            if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Tab'].includes(e.key)) return;
+            if (e.key === ' ' || e.code === 'Space') e.preventDefault();
+
+            if (!state.startTime) {
+                state.startTime = Date.now();
+                state.timerInterval = setInterval(updateHUD, 200);
+            }
+
+            const current = state.targetSequence[state.currentIndex];
+            if (!current) return;
+
+            let isMatch = false;
+            if (state.langMode === 'CN') {
+                if (e.key.toUpperCase() === current.key || e.key === current.display || (current.key === ' ' && e.key === ' ')) isMatch = true;
+            } else {
+                if (e.key.toLowerCase() === current.display.toLowerCase()) isMatch = true;
+            }
+
+            if (isMatch) {
+                state.currentIndex++;
+                state.correctHits++;
+                state.combo++;
+                if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+
+                if (state.isBossStage) {
+                    const dmg = 25 + Math.floor(state.combo * 1.5);
+                    state.bossHp = Math.max(0, state.bossHp - dmg);
+                    updateBossHpUI();
+                }
+                playSound('key');
+
+                if (state.currentIndex >= state.targetSequence.length || (state.isBossStage && state.bossHp <= 0)) {
+                    completeLevel();
+                }
+            } else {
+                state.wrongHits++;
+                state.combo = 0;
+                playSound('error');
+            }
+
+            renderTextDisplay();
+            updateHUD();
+        });
+
+        function updateBossHpUI() {
+            const percent = Math.max(0, (state.bossHp / state.bossMaxHp) * 100);
+            document.getElementById('bossHpBar').style.width = `${percent}%`;
+            document.getElementById('bossHpText').innerText = `${state.bossHp} / ${state.bossMaxHp} HP`;
+        }
+
+        function updateHUD() {
+            if (!state.startTime) return;
+            const elapsedMins = (Date.now() - state.startTime) / 60000;
+            const elapsedSecs = Math.floor((Date.now() - state.startTime) / 1000);
+            const wpm = elapsedMins > 0 ? Math.round((state.correctHits / 5) / elapsedMins) : 0;
+            const totalHits = state.correctHits + state.wrongHits;
+            const acc = totalHits > 0 ? Math.round((state.correctHits / totalHits) * 100) : 100;
+
+            document.getElementById('hudWPM').innerText = wpm;
+            document.getElementById('hudAcc').innerText = `${acc}%`;
+            document.getElementById('hudCombo').innerText = state.combo;
+            document.getElementById('hudTime').innerText = `${elapsedSecs}s`;
+            document.getElementById('levelProgressBar').style.width = `${(state.currentIndex / state.targetSequence.length) * 100}%`;
+        }
+
+        function completeLevel() {
+            state.isFinished = true;
+            if (state.timerInterval) clearInterval(state.timerInterval);
+            playSound('win');
+
+            const stages = getCurrentStages();
+            if (state.langMode === 'EN' && state.currentStageIdx === state.unlockedEnIdx) {
+                if (state.unlockedEnIdx < stages.length - 1) state.unlockedEnIdx++;
+            } else if (state.langMode === 'CN' && state.currentStageIdx === state.unlockedCnIdx) {
+                if (state.unlockedCnIdx < stages.length - 1) state.unlockedCnIdx++;
+            }
+
+            const elapsedMins = (Date.now() - state.startTime) / 60000;
+            const finalWpm = Math.round((state.correctHits / 5) / elapsedMins);
+            const totalHits = state.correctHits + state.wrongHits;
+            const finalAcc = Math.round((state.correctHits / totalHits) * 100);
+
+            document.getElementById('resWpm').innerText = finalWpm;
+            document.getElementById('resAcc').innerText = `${finalAcc}%`;
+            document.getElementById('resCombo').innerText = state.maxCombo;
+            document.getElementById('resultModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function restartLevel() {
+            document.getElementById('resultModal').classList.add('opacity-0', 'pointer-events-none');
+            startLevel(state.currentStageIdx);
+        }
+
+        function nextLevel() {
+            document.getElementById('resultModal').classList.add('opacity-0', 'pointer-events-none');
+            const stages = getCurrentStages();
+            if (state.currentStageIdx < stages.length - 1) startLevel(state.currentStageIdx + 1);
+            else switchMainTab('map');
+        }
+
+        /* ARCADE MODE */
+        function toggleArcadeGame() {
+            state.arcadeActive = !state.arcadeActive;
+            const btn = document.getElementById('arcadeStartBtn');
+            if (state.arcadeActive) {
+                state.arcadeScore = 0;
+                state.arcadeItems = [];
+                document.getElementById('arcadeScore').innerText = '0';
+                btn.innerText = '結束遊戲';
+                state.arcadeInterval = setInterval(updateArcadeLoop, 50);
+            } else {
+                clearInterval(state.arcadeInterval);
+                btn.innerText = '開始挑戰';
+            }
+        }
+
+        function updateArcadeLoop() {
+            const arena = document.getElementById('arcadeArena');
+            if (Math.random() < 0.08 && state.arcadeItems.length < 5) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                state.arcadeItems.push({
+                    id: Math.random(),
+                    char: chars[Math.floor(Math.random() * chars.length)],
+                    x: Math.random() * (arena.clientWidth - 50) + 15,
+                    y: 0,
+                    speed: 2 + Math.random() * 2
+                });
+            }
+            arena.querySelectorAll('.arcade-item').forEach(el => el.remove());
+            for (let i = state.arcadeItems.length - 1; i >= 0; i--) {
+                const item = state.arcadeItems[i];
+                item.y += item.speed;
+                if (item.y > 300) {
+                    state.arcadeItems.splice(i, 1);
+                    playSound('error');
+                    continue;
+                }
+                const el = document.createElement('div');
+                el.className = 'arcade-item absolute w-9 h-9 rounded-xl bg-pink-950 border border-pink-400 text-pink-300 font-mono font-black text-sm flex items-center justify-center';
+                el.innerText = item.char;
+                el.style.left = `${item.x}px`;
+                el.style.top = `${item.y}px`;
+                arena.appendChild(el);
+            }
+        }
+
+        function handleArcadeInput(key) {
+            const hitIdx = state.arcadeItems.findIndex(i => i.char === key.toUpperCase());
+            if (hitIdx !== -1) {
+                state.arcadeItems.splice(hitIdx, 1);
+                state.arcadeScore += 100;
+                document.getElementById('arcadeScore').innerText = state.arcadeScore;
+                playSound('key');
+            }
+        }
+
+        /* CODE WORKSHOP PRESETS */
+        function loadCodePreset(type) {
+            const input = document.getElementById('customTextInput');
+            if (type === 'js') input.value = 'const calculateSpeed = (hits, time) => Math.round((hits / 5) / (time / 60));';
+            else if (type === 'python') input.value = 'def get_wpm(correct_hits, minutes):\n    return round((correct_hits / 5) / minutes)';
+            else if (type === 'html') input.value = '<div class="cyber-box"><h1 class="text-neon">CYBER TYPE</h1></div>';
+        }
+
+        function startCustomTyping() {
+            const text = document.getElementById('customTextInput').value.trim();
+            if (!text) return;
+            ENGLISH_STAGES.push({ id: 'CUSTOM', title: '自訂文本特訓', desc: '自訂文章與代碼練習關卡', targetWpm: 25, text: text, isBoss: false });
+            startLevel(ENGLISH_STAGES.length - 1);
+        }
+
+        /* CANVAS BACKGROUND ANIMATION */
+        const canvas = document.getElementById('fxCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedY = - (Math.random() * 0.8 + 0.2);
+                this.alpha = Math.random() * 0.4 + 0.1;
+            }
+            update() {
+                this.y += this.speedY;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(236, 72, 153, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        for (let i = 0; i < 40; i++) particles.push(new Particle());
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function() {
+            renderMap();
+            animate();
+        };
+    </script>
+</body>
+</html>
